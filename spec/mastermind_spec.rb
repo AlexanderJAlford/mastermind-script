@@ -1,4 +1,4 @@
-require '~/workspace/Mastermind/mastermind'
+require_relative '../mastermind'
 
 RSpec.describe Mastermind do
   context "while initializing"
