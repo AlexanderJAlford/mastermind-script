@@ -1,11 +1,24 @@
 class Mastermind
-  attr_reader :board
-  attr_reader :turn
-  attr_reader :pegs
+  attr_reader(
+    :board,
+    :turncount,
+    :turn,
+    :pegs
+    )
 
   def initialize
     @board = Array.new
-    @pegs = ['pink', 'purple', 'yellow', 'white', 'orange', 'green']
+    @turncount = 0
+    @turn = [:move, :grade]
+    @pegs = [:pink, :purple, :yellow, :white, :orange, :green]
+  end
+
+  def addpeg(*new_peg)
+    new_peg.each do |peg|
+      if peg.is_a?(Symbol)
+        @pegs += peg
+      end
+    end
   end
 
   def input(piece1, piece2, piece3, piece4)
