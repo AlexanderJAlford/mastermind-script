@@ -7,7 +7,7 @@ class Mastermind
     )
 
   def initialize
-    @board = Array.new
+    @board = Array.new(10, Array.new)
     @turncount = 0
     @turn = [:move, :grade]
     @pegs = [:pink, :purple, :yellow, :white, :orange, :green]
@@ -16,12 +16,20 @@ class Mastermind
   def addpeg(*new_peg)
     new_peg.each do |peg|
       if peg.is_a?(Symbol)
-        @pegs += peg
+        @pegs.push(peg) #inserts new peg at the end of @pegs
       end
     end
   end
 
-  def input(piece1, piece2, piece3, piece4)
-    @board.concat([piece1, piece2, piece3, piece4])
+  def input(peg1, peg2, peg3, peg4)
+    @board[@turncount] = [peg1, peg2, peg3, peg4]
+    @turncount += 1
+  end
+
+  def newgame
+    @board = Array.new(10, Array.new)
+    @turncount = 0
+    @turn = [:move, :grade]
+    @pegs = [:pink, :purple, :yellow, :white, :orange, :green]
   end
 end

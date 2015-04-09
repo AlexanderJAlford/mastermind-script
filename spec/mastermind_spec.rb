@@ -1,39 +1,45 @@
 require './mastermind'
 
-RSpec.describe Mastermind do
-  context "while initializing"
-    it "creates an empty gameboard" do
-      game = Mastermind.new
-
-      expect(game.board).to be_empty
+describe Mastermind do
+  
+  describe '.new' do
+    game = Mastermind.new
+    it 'creates an empty gameboard of ten arrays' do
+      expect(game.board).to eq [[], [], [], [], [], [], [], [], [], []]
     end
-  context "input"
-    it "accepts input of 4 green pegs" do
-      game = Mastermind.new
-      game.input(:green, :green, :green, :green)
-      expect(game.board).to eq [:green, :green, :green, :green]
-    end
-
-      it "accepts input of 4 pegs of all 6 colors" do
+  end
+  
+  describe '.input' do
+    context 'when 4 green pegs are passed to .input' do 
+      it 'accepts the input and updates one row of the board accordingly' do
         game = Mastermind.new
-        game.pegs.each do |color|
+        game.input(:green, :green, :green, :green)
+        expect(game.board).to eq [[:green, :green, :green, :green], [], [], [], [], [], [], [], [], []]
+      end
+    end
+    it 'accepts input of 4 pegs of all 6 colors' do
+      game = Mastermind.new
+      game.pegs.each do |color|
+        10.times do |i|
           game.input(color, color, color, color)
-          expect(game.board).to eq [color, color, color, color]
-          game.board.clear
+          expect(game.board[i]).to eq [color, color, color, color]
         end
+        game.newgame
       end
+    end
+  end
 
-      it "allows additional peg colors to be added" do
-        game = Mastermind.new
-        game.addpeg :brown
-        expect(game.pegs).to eq [:pink, :purple,
-          :yellow, :white, :orange, :green, :brown]
-      end
+  describe '.addpeg' do
+    it 'allows additional peg colors to be added' do
+      game = Mastermind.new
+      game.addpeg(:brown)
+      expect(game.pegs).to eq [:pink, :purple, :yellow, :white, :orange, :green, :brown]
+    end
+  end
 
-      it "does not allow non-symbol peg colors to be added" do
-        game = Mastermind.new
-        game.addpeg 'brown'
-        expect(game.pegs).not_to eq [:pink, :purple,
-          :yellow, :white, :orange, :green, 'brown']
+    it 'does not allow non-symbol peg colors to be added' do
+      game = Mastermind.new
+      game.addpeg 'brown'
+      expect(game.pegs).not_to eq [:pink, :purple, :yellow, :white, :orange, :green, 'brown']
     end
 end
