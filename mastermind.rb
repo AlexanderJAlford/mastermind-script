@@ -13,12 +13,12 @@ class Mastermind
   :pegs
   )
 
-  def edit_board(action, *pegs)
+  def edit_board(action, *args)
     case action
     when :create
       @board = Array.new(10) {Array.new(4)}
     when :play
-      @board[@turncount] = [pegs[0], pegs[1], pegs[2], pegs[3]]
+      @board[@turncount] = [args[0], args[1], args[2], args[3]]
       @turncount += 1
     when :clear
       self.edit_board(:create)
@@ -26,11 +26,14 @@ class Mastermind
     end
   end
 
-  def edit_pegs(*pegs) #remember to add case action like edit_board
-    pegs.each do |peg|
-      if peg.is_a?(Symbol)
-        @pegs.push(peg) #inserts new peg at the end of @pegs
-      end
+  def edit_pegs(action, *args)
+    case action
+    when :remove
+      @pegs -= args
+    when :add
+      @pegs += args
+    when :replace
+      @pegs[@pegs.index(args[0])] = args[1]
     end
   end
 end

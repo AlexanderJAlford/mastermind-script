@@ -10,33 +10,41 @@ describe Mastermind do
       end
     end
     context '(:play)' do
-      it 'plays args 2-5 as a guess' do
-        game.edit_board(:play, :green, :purple, :orange, :yellow)
+      it 'plays args 2-5 as a guess, ignoring args 6 and above' do
+        game.edit_board(:play, :green, :purple, :orange, :yellow, :green, :purple, :green)
         expect(game.board[0]).to eq [:green, :purple, :orange, :yellow]
       end
-      it 'ignores args 6 and above' do
-        game.edit_board(:play, :purple, :yellow, :pink, :white, :green, :purple, :green)
-        expect(game.board[0]).to eq [:purple, :yellow, :pink, :white]
-      end
     end
-    subject { game.edit_board(:clear) }
-    it 'regenerates @board and resets @turncount' do
-      game.edit_board(:play, :green, :purple, :orange, :yellow)
-      game.edit_board(:clear)
-      expect(game.board).to eq empty_board
-      expect(game.turncount).to eq 0
+    context '(:clear)' do
+      it 'regenerates @board and resets @turncount' do
+        game.edit_board(:play, :green, :purple, :orange, :yellow)
+        game.edit_board(:clear)
+        expect(game.board).to eq empty_board
+        expect(game.turncount).to eq 0
+      end
     end
   end
   describe '.edit_pegs' do
+    let(:default_pegs) { [:pink, :purple, :yellow, :white, :orange, :green] }
     let(:game) { Mastermind.new }
-    it 'allows additional peg colors to be added' do
-      game.edit_pegs :brown
-      expect(game.pegs).to eq [:pink, :purple, :yellow, :white, :orange, :green, :brown]
+    context '(:remove)' do
+      it 'removes pegs that match args 2-* from @pegs' do
+        game.edit_pegs(:remove, :pink)
+        expect(game.pegs).to eq (default_pegs - [:pink])
+      end
     end
-
-    it 'does not allow non-symbol peg colors to be added' do
-      game.edit_pegs 'brown'
-      expect(game.pegs).not_to eq [:pink, :purple, :yellow, :white, :orange, :green, 'brown']
+    context '(:add)' do
+      it 'adds args 2-* to @pegs' do
+        game.edit_pegs(:add, :brown, :empty, :blue, :crimson)
+        expect(game.pegs).to eq (default_pegs + [:brown, :empty, :blue, :crimson])
+      end
+    end
+    context '(:replace)' do
+      it 'replaces pegs in @pegs that match args[0] to equal args[1]' do
+        game.edit_pegs(:rename, :purple, :violet)
+        expect(game.pegs).not_to include :purple
+        expect(game.pegs).to include :violet
+      end
     end
   end
   describe '.new_game' do
