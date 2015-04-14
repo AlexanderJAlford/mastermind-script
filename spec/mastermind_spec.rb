@@ -19,13 +19,12 @@ describe Mastermind do
         expect(game.board[0]).to eq [:purple, :yellow, :pink, :white]
       end
     end
-    context '(:clear)' do
-      it 'regenerates @board and resets @turncount' do
-        game.edit_board(:play, :green, :purple, :orange, :yellow)
-        game.edit_board(:clear)
-        expect(game.board).to eq empty_board
-        expect(game.turncount).to eq 0
-      end
+    subject { game.edit_board(:clear) }
+    it 'regenerates @board and resets @turncount' do
+      game.edit_board(:play, :green, :purple, :orange, :yellow)
+      game.edit_board(:clear)
+      expect(game.board).to eq empty_board
+      expect(game.turncount).to eq 0
     end
   end
   describe '.edit_pegs' do
@@ -42,5 +41,5 @@ describe Mastermind do
   end
   describe '.new_game' do
     subject { Mastermind.new }
-
+  end
 end
