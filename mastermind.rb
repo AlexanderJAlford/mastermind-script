@@ -4,13 +4,15 @@ class Mastermind
     @turncount = 0
     @turn = [:move, :grade]
     @pegs = [:pink, :purple, :yellow, :white, :orange, :green]
+    @code = Array.new(4)
   end
 
   attr_reader(
   :board,
   :turncount,
   :turn,
-  :pegs
+  :pegs,
+  :code
   )
 
   def edit_board(action, *args)
@@ -19,10 +21,11 @@ class Mastermind
       @board = Array.new(10) {Array.new(4)}
     when :play
       @board[@turncount] = [args[0], args[1], args[2], args[3]]
-      @turncount += 1
     when :clear
       self.edit_board(:create)
       @turncount = 0
+    when :set_code
+      @code = [args[0], args[1], args[2], args[3]]
     end
   end
 
@@ -35,5 +38,13 @@ class Mastermind
     when :replace
       @pegs[@pegs.index(args[0])] = args[1]
     end
+  end
+
+  def grade
+    grade = Array.new(4)
+    guess = board[@turncount]
+    solution = @code
+    @turncount += 1
+    return grade
   end
 end
