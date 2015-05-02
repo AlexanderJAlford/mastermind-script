@@ -2,7 +2,7 @@ require './mastermind'
 
 describe Mastermind do
 
-  describe '.edit_board' do
+  describe '#edit_board' do
     let(:empty_board) {Array.new(10) {Array.new(4)}} #Ten arrays of four within an array
     let(:game) { Mastermind.new }
     context '(:create)' do
@@ -32,7 +32,7 @@ describe Mastermind do
     end
   end
 
-  describe '.edit_pegs' do
+  describe '#edit_pegs' do
     let(:default_pegs) { [:pink, :purple, :yellow, :white, :orange, :green] }
     let(:game) { Mastermind.new }
     context '(:remove)' do
@@ -56,14 +56,51 @@ describe Mastermind do
     end
   end
 
-  describe '.grade' do
+  def generate_test_peg_array(length=4)
+    if length != Integer
+      length = 4
+    end
+    peg_array = Array.new(length)
+    4.times do |i|
+      peg_array[i] = game.pegs[rand(6)]
+    end
+    peg_array
+  end
+
+  def generate_test_indices(number=2)
+    if number != Integer
+      number = 2
+    end
+    indices = [0, 1, 2, 3]
+    indices.sample(number)
+  end
+
+  describe '#grade' do
     let(:game) { Mastermind.new }
-    context 'when passed an array equal to @code' do
-      it 'grades the array with four red pegs' do
-        game.edit_board(:set_code, :yellow, :green, :green, :purple)
-        game.edit_board(:play, :green, :yellow, :green, :purple)
-        expect(game.grade).to eq [:red, :red, :red, :red]
+    context 'when the guess includes pegs that are in @code, but at the wrong index' do
+      it 'grades the array with white pegs equal to the number of unique partial-matches' do
+        10.times do
+          test_code = generate_test_peg_array
+          test_guess = generate_test_peg_array
+          test_color = game.pegs[rand(6)]
+          test_indices = generate_test_indices
+          inverse_test_indices = [0, 1, 2, 3].select { |i| i != test_indices[0] && i !=test_indices[1] }
+
+          test_indices.each do |i|
+            test_code[i] = test_color
+          end
+
+          game.edit_board(:set_code, test_code)
+          game.edit_board(:play, test_guess)
+          # game.edit_board(:set_code, test_guess)
+          # game.edit_board(:play, :white, :yellow, :green, :white)
+          # expect(game.grade).to eq [:white, :white]
+        end
       end
     end
+    # context 'when the guess includes pegs that are in @code and at the correct index' do
+    #   it 'grades the array with white pegs equal to the number of unique matches' do
+    #   end
+    # end
   end
 end

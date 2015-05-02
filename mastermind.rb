@@ -43,8 +43,12 @@ class Mastermind
   def grade
     grade = Array.new(4)
     guess = board[@turncount]
-    solution = @code
     @turncount += 1
-    return grade
+    white_peg_matches = @code.select.with_index { |peg, index| guess.include?(peg) && guess[index] != @code[index] }
+    # If one wishes to read the color of the pegs, this is the place to do it.
+    white_peg_matches.map! { |peg| :white }
+    # red_peg_matches = @code.select.with_index { |peg, index| guess[index] == peg }
+    # red_peg_matche
+    return white_peg_matches.shuffle
   end
 end
